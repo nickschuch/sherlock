@@ -1,40 +1,38 @@
 package main
 
 import (
-	"bytes"
-	"text/template"
+	"fmt"
 
-	slack "github.com/nickschuch/go-slack"
+	"github.com/nlopes/slack"
 )
 
-const messageFormat = `A Pod murder has taken place!!!
-**Cluster**: _{{ .Cluster }}_
-**Details**: _{{ .Name }}_
-**Inspect**: _sherlock --bucket=foo inspect {{ .Incident }}_`
+func notifySlack(key, channel, bucket, cluster, namespace, pod, container, incident string) error {
+	api := slack.New(key)
 
-func notifySlack(slackUrl, slackEmoji, cluster, name, incident string) error {
-	msg, err := notifySlackMessage(cluster, name, incident)
-	if err != nil {
-		return err
+	params := slack.PostMessageParameters{
+		Username:  "Watson",
+		IconEmoji: ":watson:",
+		Attachments: []slack.Attachment{
+			{
+				Fields: []slack.AttachmentField{
+					{
+						Title: "Cluster",
+						Value: cluster,
+						Short: true,
+					},
+					{
+						Title: "Pod",
+						Value: fmt.Sprintf("%s / %s / %s", namespace, pod, container),
+					},
+					{
+						Title: "Inspect",
+						Value: fmt.Sprintf("sherlock --bucket=%s inspect %s", bucket, incident),
+					},
+				},
+			},
+		},
 	}
 
-	return slack.Send("Watson", slackEmoji, msg, slackUrl)
-}
-
-// Helper function for building hostname.
-func notifySlackMessage(cluster, name, incident string) (string, error) {
-	var formatted bytes.Buffer
-
-	msg := Message{
-		Cluster:  cluster,
-		Name:     name,
-		Incident: incident,
-	}
-
-	err := template.Must(template.New("message").Parse(messageFormat)).Execute(&formatted, msg)
-	if err != nil {
-		return "", err
-	}
-
-	return formatted.String(), nil
+	_, _, err := api.PostMessage(channel, "A Pod has been murdered!", params)
+	return err
 }

@@ -81,11 +81,41 @@
 			"branch": "master"
 		},
 		{
+			"importpath": "github.com/mattn/go-colorable",
+			"repository": "https://github.com/mattn/go-colorable",
+			"revision": "ad5389df28cdac544c99bd7b9161a0b5b6ca9d1b",
+			"branch": "master"
+		},
+		{
+			"importpath": "github.com/mattn/go-isatty",
+			"repository": "https://github.com/mattn/go-isatty",
+			"revision": "fc9e8d8ef48496124e79ae0df75490096eccf6fe",
+			"branch": "master"
+		},
+		{
 			"importpath": "github.com/matttproud/golang_protobuf_extensions/pbutil",
 			"repository": "https://github.com/matttproud/golang_protobuf_extensions",
 			"revision": "c12348ce28de40eed0136aa2b644d0ee0650e56c",
 			"branch": "master",
 			"path": "/pbutil"
+		},
+		{
+			"importpath": "github.com/mgutz/ansi",
+			"repository": "https://github.com/mgutz/ansi",
+			"revision": "9520e82c474b0a04dd04f8a40959027271bab992",
+			"branch": "master"
+		},
+		{
+			"importpath": "github.com/nickschuch/str2color",
+			"repository": "https://github.com/nickschuch/str2color",
+			"revision": "d927b7f6679895adc17e69bfa0179284ad980e91",
+			"branch": "master"
+		},
+		{
+			"importpath": "github.com/nlopes/slack",
+			"repository": "https://github.com/nlopes/slack",
+			"revision": "5cde21b8b96a43fc3435a1f514123d14fd7eabdc",
+			"branch": "master"
 		},
 		{
 			"importpath": "github.com/prometheus/client_golang/prometheus",
@@ -154,6 +184,13 @@
 			"revision": "b0c9c05bfe149df95eb1d25642162cca051e0466",
 			"branch": "master",
 			"path": "/ssh/terminal"
+		},
+		{
+			"importpath": "golang.org/x/net/websocket",
+			"repository": "https://go.googlesource.com/net",
+			"revision": "0744d001aa8470aaa53df28d32e5ceeb8af9bd70",
+			"branch": "master",
+			"path": "/websocket"
 		},
 		{
 			"importpath": "golang.org/x/sys/unix",

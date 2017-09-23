@@ -2,21 +2,13 @@ package cmd
 
 import (
 	"fmt"
-	"os"
-	"text/template"
+	"strings"
 
+	"github.com/nickschuch/str2color"
 	"gopkg.in/alecthomas/kingpin.v2"
 
 	"github.com/nickschuch/sherlock/common/storage"
 )
-
-const tmplInspect = `{{ range $key, $value := . }}
-###########################################################################
-{{ $key }}
-###########################################################################
-
-{{ $value }}
-{{ end }}`
 
 type cmdInspect struct {
 	region   string
@@ -33,7 +25,15 @@ func (cmd *cmdInspect) run(c *kingpin.ParseContext) error {
 		return fmt.Errorf("failed to lookup incident: %s", err)
 	}
 
-	return template.Must(template.New("inspect").Parse(tmplInspect)).Execute(os.Stdout, files)
+	for file, content := range files {
+		for _, line := range strings.Split(content, "\n") {
+			fmt.Println(str2color.Wrap(file), "\t", line)
+		}
+
+		fmt.Println("-----------------------------------------------------------------------------------------------")
+	}
+
+	return nil
 }
 
 // Inspect declares the "inspect" sub command.

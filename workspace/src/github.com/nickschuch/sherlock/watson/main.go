@@ -17,7 +17,6 @@ import (
 	"k8s.io/client-go/tools/cache"
 
 	"github.com/nickschuch/sherlock/common/storage"
-	"strings"
 )
 
 var (
@@ -26,8 +25,8 @@ var (
 	cliRegion         = kingpin.Flag("s3-region", "Region of the S3 bucket to store data").Default("ap-southeast-2").OverrideDefaultFromEnvar("S3_REGION").String()
 	cliPrometheusPort = kingpin.Flag("prometheus-port", "Prometheus metrics port").Default(":9000").OverrideDefaultFromEnvar("METRICS_PORT").String()
 	cliPrometheusPath = kingpin.Flag("prometheus-path", "Prometheus metrics path").Default("/metrics").OverrideDefaultFromEnvar("METRICS_PATH").String()
-	cliSlackUrl       = kingpin.Flag("slack-url", "Slack channel to use for posting updates").Default("").OverrideDefaultFromEnvar("SLACK_URL").String()
-	cliSlackEmoji     = kingpin.Flag("slack-emoji", "Slack emoji to use for updates").Default(":watson:").OverrideDefaultFromEnvar("SLACK_EMOJI").String()
+	cliSlackKey       = kingpin.Flag("slack-key", "Slack key to use for authentication").Default("").OverrideDefaultFromEnvar("SLACK_KEY").String()
+	cliSlackChannel   = kingpin.Flag("slack-channel", "Slack channel to use for posting updates").Default("general").OverrideDefaultFromEnvar("SLACK_CHANNEL").String()
 	cliClusterName    = kingpin.Flag("cluster-name", "Cluster name to use for Slack notifications").Default("").OverrideDefaultFromEnvar("CLUSTER_NAME").String()
 )
 
@@ -154,8 +153,8 @@ func push(kubeClient *kubernetes.Clientset, pod *v1.Pod, container v1.ContainerS
 	}
 
 	// Check if we need to send a message to Slack about this incident.
-	if *cliSlackUrl != "" && *cliSlackEmoji != "" {
-		err := notifySlack(*cliSlackUrl, *cliSlackEmoji, *cliClusterName, fmt.Sprintf("%s/%s/%s", pod.Namespace, pod.Name, container.Name), incident)
+	if *cliSlackKey != "" && *cliSlackChannel != "" {
+		err := notifySlack(*cliSlackKey, *cliSlackChannel, *cliS3Bucket, *cliClusterName, pod.Namespace, pod.Name, container.Name, incident)
 		if err != nil {
 			return fmt.Errorf("Failed to send Slack notification: %s", err)
 		}
