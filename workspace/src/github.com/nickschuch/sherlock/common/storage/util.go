@@ -9,6 +9,7 @@ import (
 
 func lookup(client *s3.S3, bucket string, key *string) (string, Incident, error) {
 	var (
+		cluster      *string
 		namespace    *string
 		pod          *string
 		container    *string
@@ -24,6 +25,11 @@ func lookup(client *s3.S3, bucket string, key *string) (string, Incident, error)
 	})
 	if err != nil {
 		return "", incident, err
+	}
+
+	// Check for Cluster metadata.
+	if cluster, ok = head.Metadata[metaKeyCluster]; !ok {
+		return "", incident, fmt.Errorf("cannot find object with metadata: %s", metaKeyCluster)
 	}
 
 	// Check for Namespace metadata.
@@ -54,6 +60,7 @@ func lookup(client *s3.S3, bucket string, key *string) (string, Incident, error)
 	incident.File = *key
 	incident.Type = *incidentType
 	incident.Created = *head.LastModified
+	incident.Cluster = *cluster
 	incident.Namespace = *namespace
 	incident.Pod = *pod
 	incident.Container = *container

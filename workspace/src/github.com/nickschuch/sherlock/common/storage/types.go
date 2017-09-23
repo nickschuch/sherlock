@@ -8,6 +8,7 @@ import (
 )
 
 const (
+	metaKeyCluster      = "Cluster"
 	metaKeyNamespace    = "Namespace"
 	metaKeyPod          = "Pod"
 	metaKeyContainer    = "Container"
@@ -27,6 +28,7 @@ type Incident struct {
 	File      string
 	Type      string
 	Created   time.Time
+	Cluster   string
 	Namespace string
 	Pod       string
 	Container string

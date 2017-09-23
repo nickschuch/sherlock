@@ -22,13 +22,14 @@ func New(region, bucket string) Client {
 	}
 }
 
-func (s Client) Write(namespace, pod, container, incident, name string, data []byte) error {
+func (s Client) Write(cluster, namespace, pod, container, incident, name string, data []byte) error {
 	_, err := s.uploader.Upload(&s3manager.UploadInput{
 		Body:   bytes.NewReader(data),
 		Bucket: aws.String(s.bucket),
-		Key:    aws.String(filepath.Join(namespace, pod, container, incident, name)),
+		Key:    aws.String(filepath.Join(cluster, namespace, pod, container, incident, name)),
 		ACL:    aws.String("private"),
 		Metadata: map[string]*string{
+			metaKeyCluster:      aws.String(cluster),
 			metaKeyNamespace:    aws.String(namespace),
 			metaKeyPod:          aws.String(pod),
 			metaKeyContainer:    aws.String(container),

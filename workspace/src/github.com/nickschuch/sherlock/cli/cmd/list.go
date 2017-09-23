@@ -25,9 +25,9 @@ func (cmd *cmdList) run(c *kingpin.ParseContext) error {
 	table := uitable.New()
 	table.MaxColWidth = 50
 
-	table.AddRow("INCIDENT ID", "TIMESTAMP", "NAMESPACE", "POD", "CONTAINER")
+	table.AddRow("INCIDENT ID", "CLUSTER", "TIMESTAMP", "NAMESPACE", "POD", "CONTAINER")
 	for id, incident := range incidents {
-		table.AddRow(id, incident.Created, incident.Namespace, incident.Pod, incident.Container)
+		table.AddRow(id, incident.Cluster, incident.Created, incident.Namespace, incident.Pod, incident.Container)
 	}
 
 	fmt.Println(table)

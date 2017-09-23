@@ -119,7 +119,7 @@ func push(kubeClient *kubernetes.Clientset, pod *v1.Pod, container v1.ContainerS
 
 	log.With("id", id).Info("Sending object to storage")
 
-	store.Write(pod.Namespace, pod.Name, container.Name, incident, fileObject, meta)
+	store.Write(*cliClusterName, pod.Namespace, pod.Name, container.Name, incident, fileObject, meta)
 	if err != nil {
 		panic(err)
 	}
@@ -133,7 +133,7 @@ func push(kubeClient *kubernetes.Clientset, pod *v1.Pod, container v1.ContainerS
 
 	log.With("id", id).Info("Sending logs to storage")
 
-	store.Write(pod.Namespace, pod.Name, container.Name, incident, fileLogs, logs)
+	store.Write(*cliClusterName, pod.Namespace, pod.Name, container.Name, incident, fileLogs, logs)
 	if err != nil {
 		return fmt.Errorf("Failed to store container logs: %s", err)
 	}
@@ -147,7 +147,7 @@ func push(kubeClient *kubernetes.Clientset, pod *v1.Pod, container v1.ContainerS
 
 	log.With("id", id).Info("Sending events to storage")
 
-	store.Write(pod.Namespace, pod.Name, container.Name, incident, fileEvents, events)
+	store.Write(*cliClusterName, pod.Namespace, pod.Name, container.Name, incident, fileEvents, events)
 	if err != nil {
 		return fmt.Errorf("Failed to store container events: %s", err)
 	}

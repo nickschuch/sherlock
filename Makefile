@@ -1,7 +1,7 @@
 #!/usr/bin/make -f
 
 VERSION=$(shell git describe --tags --always)
-IMAGE=nickschuch/sherlock
+IMAGE=nickschuch/watson
 
 release: build push
 
