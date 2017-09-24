@@ -26,7 +26,7 @@ func notifySlack(key, channel, bucket, cluster, namespace, pod, container, incid
 					},
 					{
 						Title: "Inspect",
-						Value: fmt.Sprintf("sherlock --bucket=%s inspect %s", bucket, incident),
+						Value: fmt.Sprintf("sherlock inspect --s3-bucket=%s %s", bucket, incident),
 					},
 				},
 			},
