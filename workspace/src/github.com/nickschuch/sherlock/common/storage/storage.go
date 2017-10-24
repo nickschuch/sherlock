@@ -12,6 +12,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 )
 
+// New returns a new storage client.
 func New(region, bucket string) Client {
 	var sess = session.New(&aws.Config{Region: aws.String(region)})
 
@@ -22,6 +23,7 @@ func New(region, bucket string) Client {
 	}
 }
 
+// Write is used for writing new debug data.
 func (s Client) Write(cluster, namespace, pod, container, incident, name string, data []byte) error {
 	_, err := s.uploader.Upload(&s3manager.UploadInput{
 		Body:   bytes.NewReader(data),
@@ -40,6 +42,7 @@ func (s Client) Write(cluster, namespace, pod, container, incident, name string,
 	return err
 }
 
+// Incidents returns a list of incidents.
 func (s Client) Incidents() (Incidents, error) {
 	incidents := make(Incidents)
 
@@ -62,6 +65,7 @@ func (s Client) Incidents() (Incidents, error) {
 	return incidents, nil
 }
 
+// IncidentDetails returns a list of incident details.
 func (s Client) IncidentDetails(incidentID string) (map[string]string, error) {
 	files := make(map[string]string)
 

@@ -16,14 +16,17 @@ const (
 	metaKeyIncidentType = "Incidenttype"
 )
 
+// Client is used for interacting with the storage.
 type Client struct {
 	bucket   string
 	uploader *s3manager.Uploader
 	client   *s3.S3
 }
 
+// Incidents is a list of incidents.
 type Incidents map[string]Incident
 
+// Incident occurs when a pod is restarted.
 type Incident struct {
 	File      string
 	Type      string
