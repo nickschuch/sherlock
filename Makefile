@@ -16,7 +16,7 @@ lint:
 test:
 	go test -cover ./...
 
-IMAGE=previousnext/sherlock
+IMAGE=nickschuch/sherlock
 VERSION=$(shell git describe --tags --always)
 
 # Releases the project Docker Hub

@@ -15,8 +15,8 @@ import (
 	"k8s.io/client-go/tools/cache"
 	"github.com/pkg/errors"
 	"github.com/google/uuid"
-	"k8s.io/apimachinery/pkg/runtime"
 	"github.com/ghodss/yaml"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 	"github.com/nickschuch/sherlock/utils"
 	"github.com/nickschuch/sherlock/storage"
@@ -164,7 +164,7 @@ func push(kubeClient *kubernetes.Clientset, pod *corev1.Pod, container corev1.Co
 			Bucket: params.bucket,
 			Cluster: params.clusterName,
 			Namespace: pod.Namespace,
-			Pod: pod.Namespace,
+			Pod: pod.Name,
 			Container: container.Name,
 			ID: id.String(),
 		})
@@ -191,7 +191,7 @@ func Watson(app *kingpin.Application) {
 }
 
 func getEvents(kubeClient *kubernetes.Clientset, pod *corev1.Pod) (string, error) {
-	list, err := kubeClient.CoreV1().Events(pod.Namespace).Search(&runtime.Scheme{}, pod)
+	list, err := kubeClient.CoreV1().Events(pod.Namespace).List(metav1.ListOptions{})
 	if err != nil {
 		return "", err
 	}
