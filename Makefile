@@ -1,12 +1,27 @@
 #!/usr/bin/make -f
 
-VERSION=$(shell git describe --tags --always)
-IMAGE=nickschuch/watson
+export CGO_ENABLED=0
 
-release: build push
+PROJECT=github.com/nickschuch/sherlock
 
+# Builds the project
 build:
-	docker build -t ${IMAGE}:${VERSION} .
+	gox -os='linux darwin' -arch='amd64' -output='bin/sherlock_{{.OS}}_{{.Arch}}' -ldflags='-extldflags "-static"' $(PROJECT)
 
-push:
+# Run all lint checking with exit codes for CI
+lint:
+	golint -set_exit_status `go list ./... | grep -v /vendor/`
+
+# Run tests with coverage reporting
+test:
+	go test -cover ./...
+
+IMAGE=previousnext/sherlock
+VERSION=$(shell git describe --tags --always)
+
+# Releases the project Docker Hub
+release:
+	docker build -t ${IMAGE}:${VERSION} .
 	docker push ${IMAGE}:${VERSION}
+
+.PHONY: build lint test release
