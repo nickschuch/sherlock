@@ -72,20 +72,24 @@ func (cmd *cmdWatson) run(c *kingpin.ParseContext) error {
 					panic(err)
 				}
 
-				for _, newContainer := range newPod.Status.ContainerStatuses {
-					oldContainer, err := utils.HasRestarts(oldPod.Status.ContainerStatuses, newContainer.Name)
-					if err != nil {
-						log.Errorf("Failed to get container restarts: %s", err)
-						continue
-					}
+				if utils.IsIgnored(newPod) {
+					log.Info("Skipping ignored pod %s/%s", newPod.ObjectMeta.Namespace, newPod.ObjectMeta.Name)
+				} else {
+					for _, newContainer := range newPod.Status.ContainerStatuses {
+						oldContainer, err := utils.HasRestarts(oldPod.Status.ContainerStatuses, newContainer.Name)
+						if err != nil {
+							log.Errorf("Failed to get container restarts: %s", err)
+							continue
+						}
 
-					if newContainer.RestartCount > oldContainer.RestartCount {
-						go func(pod *corev1.Pod, container corev1.ContainerStatus) {
-							err := push(kubeClient, pod, container, *cmd)
-							if err != nil {
-								log.Infof("Failed sending trace: %s", err)
-							}
-						}(oldPod, oldContainer)
+						if newContainer.RestartCount > oldContainer.RestartCount {
+							go func(pod *corev1.Pod, container corev1.ContainerStatus) {
+								err := push(kubeClient, pod, container, *cmd)
+								if err != nil {
+									log.Infof("Failed sending trace: %s", err)
+								}
+							}(oldPod, oldContainer)
+						}
 					}
 				}
 			},
