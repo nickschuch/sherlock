@@ -73,7 +73,7 @@ func (cmd *cmdWatson) run(c *kingpin.ParseContext) error {
 				}
 
 				if utils.IsIgnored(newPod) {
-					log.Info("Skipping ignored pod %s/%s", newPod.ObjectMeta.Namespace, newPod.ObjectMeta.Name)
+					log.Info(fmt.Sprintf("Skipping ignored pod %s/%s", newPod.ObjectMeta.Namespace, newPod.ObjectMeta.Name))
 				} else {
 					for _, newContainer := range newPod.Status.ContainerStatuses {
 						oldContainer, err := utils.HasRestarts(oldPod.Status.ContainerStatuses, newContainer.Name)
