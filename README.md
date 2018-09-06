@@ -70,6 +70,19 @@ output.log 	 ...................................................................
 output.log 	 ........................................................................................................
 ```
 
+**Ignores**
+
+You may want to ignore some pods. This can be done by adding the following annotation to it.
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    sherlock.nickschuch.github.com/watson-ignore: "true"
+  ...
+```
+
 ## Resources
 
 * [Dave Cheney - Reproducible Builds](https://www.youtube.com/watch?v=c3dW80eO88I)
