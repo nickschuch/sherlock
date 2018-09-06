@@ -6,6 +6,10 @@ import (
 	corev1 "k8s.io/api/core/v1"
 )
 
+const (
+	IgnorePodAnnotation = "sherlock.nickschuch.github.com/watson-ignore"
+)
+
 func HasRestarts(statuses []corev1.ContainerStatus, name string) (corev1.ContainerStatus, error) {
 	for _, status := range statuses {
 		if status.Name == name {
@@ -19,7 +23,7 @@ func HasRestarts(statuses []corev1.ContainerStatus, name string) (corev1.Contain
 // IsIgnored checks for the pod annotation which instructs watson to ignore it.
 func IsIgnored(pod *corev1.Pod) bool {
 	for k, _ := range pod.ObjectMeta.Annotations {
-		if k == "sherlock.nickschuch.github.com/watson-ignore" {
+		if k == IgnorePodAnnotation {
 			return true
 		}
 	}
