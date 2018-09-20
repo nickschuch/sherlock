@@ -22,11 +22,8 @@ func HasRestarts(statuses []corev1.ContainerStatus, name string) (corev1.Contain
 
 // IsIgnored checks for the pod annotation which instructs watson to ignore it.
 func IsIgnored(pod *corev1.Pod) bool {
-	for k, _ := range pod.ObjectMeta.Annotations {
-		if k == IgnorePodAnnotation {
-			return true
-		}
+	if _, ok := pod.ObjectMeta.Annotations[IgnorePodAnnotation]; ok {
+		return true
 	}
-
 	return false
 }
